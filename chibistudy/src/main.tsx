@@ -1,16 +1,18 @@
-import { StrictMode } from 'react'
+import { StrictMode, Suspense, lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
-import InboxPage from './pages/InboxPage.tsx'
-import CalendarPage from './pages/CalendarPage.tsx'
-import AnalyticsPage from './pages/AnalyticsPage.tsx'
-import FocusPage from './pages/FocusPage.tsx'
-import SettingsPage from './pages/SettingsPage.tsx'
-import ProfilePage from './pages/ProfilePage.tsx'
 import './i18n'
 import { installKurumi } from './lib/kurumi'
+import AnimeLoader from './components/AnimeLoader'
+
+const InboxPage = lazy(() => import('./pages/InboxPage'))
+const CalendarPage = lazy(() => import('./pages/CalendarPage'))
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'))
+const FocusPage = lazy(() => import('./pages/FocusPage'))
+const SettingsPage = lazy(() => import('./pages/SettingsPage'))
+const ProfilePage = lazy(() => import('./pages/ProfilePage'))
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,8 @@ installKurumi()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Suspense fallback={<AnimeLoader /> }>
+      <RouterProvider router={router} />
+    </Suspense>
   </StrictMode>,
 )

@@ -84,7 +84,11 @@ export const useAIStore = create<AIState>((set) => ({
       const pred = model.predict(x) as tf.Tensor
       const val = (await pred.data())[0]
       x.dispose(); pred.dispose()
-      const score = Math.max(0.5, Math.min(3, val))
+      // smoothing EMA với alpha 0.4
+      const raw = Math.max(0.5, Math.min(3, val))
+      const prev = task.procrastinationScore ?? 1
+      const alpha = 0.4
+      const score = prev * (1 - alpha) + raw * alpha
       await tasks.update(taskId, { procrastinationScore: score })
       return score
     } catch {

@@ -1,0 +1,9 @@
+{
+  "name": "ChibiStudy",
+  "short_name": "ChibiStudy",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF0F5",
+  "theme_color": "#FF69B4",
+  "icons": []
+}

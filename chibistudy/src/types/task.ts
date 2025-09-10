@@ -16,6 +16,7 @@ export type Task = {
   estimatedMinutes?: number
   actualMinutes?: number
   priority: TaskPriority
+  rating?: number
   tags: string[]
   status: TaskStatus
   recurrence?: TaskRecurrence

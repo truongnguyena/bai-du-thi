@@ -74,6 +74,13 @@ export default function TaskCard({ task }: Props) {
         ) : null}
       </div>
       <div className="flex items-center gap-2">
+        <div className="flex items-center gap-0.5 text-yellow-500">
+          {[1,2,3,4,5].map((n) => (
+            <button key={n} onClick={() => update(task.id, { rating: n })} aria-label={`rate-${n}`}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill={((task.rating ?? 0) >= n) ? 'currentColor' : 'none'} stroke="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            </button>
+          ))}
+        </div>
         {activeTaskId === task.id ? (
           <button
             className="rounded-md bg-pink-500 px-2 py-1 text-xs text-white hover:bg-pink-600"
