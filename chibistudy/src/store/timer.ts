@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import dayjs from 'dayjs'
 import { useTasksStore } from './tasks'
+import { provenance } from '../lib/kurumi'
 
 type TimerState = {
   activeTaskId: string | null
@@ -21,6 +22,7 @@ export const useTimerStore = create<TimerState>((set, get) => ({
     }
     await tasks.update(taskId, { status: 'in_progress' })
     set({ activeTaskId: taskId, startedAtIso: dayjs().toISOString() })
+    provenance('start', { id: taskId })
   },
   stop: async () => {
     const { activeTaskId, startedAtIso } = get()
@@ -31,6 +33,7 @@ export const useTimerStore = create<TimerState>((set, get) => ({
     const newActual = (task?.actualMinutes ?? 0) + elapsedMinutes
     await tasks.update(activeTaskId, { actualMinutes: newActual })
     set({ activeTaskId: null, startedAtIso: null })
+    provenance('stop', { id: activeTaskId, elapsedMinutes })
   },
 }))
 

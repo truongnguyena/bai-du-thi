@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid/non-secure'
 import dayjs from 'dayjs'
 import { db } from '../db/dexie'
 import { type Task, type CreateTaskInput } from '../types/task'
+import { provenance } from '../lib/kurumi'
 
 type TasksState = {
   items: Task[]
@@ -20,6 +21,7 @@ export const useTasksStore = create<TasksState>((set, get) => ({
     set({ loading: true })
     const tasks = await db.tasks.orderBy('createdAt').reverse().toArray()
     set({ items: tasks, loading: false })
+    provenance('load', { count: tasks.length })
   },
   create: async (input) => {
     const now = dayjs().toISOString()
@@ -34,18 +36,22 @@ export const useTasksStore = create<TasksState>((set, get) => ({
       priority: input.priority ?? 'med',
       tags: input.tags ?? [],
       status: 'todo',
+      createdBy: 'kurumi',
     }
     await db.tasks.put(task)
     set({ items: [task, ...get().items] })
+    provenance('create', { id: task.id })
     return task
   },
   update: async (id, partial) => {
     await db.tasks.update(id, partial)
     set({ items: get().items.map((t) => (t.id === id ? { ...t, ...partial } : t)) })
+    provenance('update', { id })
   },
   remove: async (id) => {
     await db.tasks.delete(id)
     set({ items: get().items.filter((t) => t.id !== id) })
+    provenance('remove', { id })
   },
 }))
 

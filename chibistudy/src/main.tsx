@@ -9,6 +9,7 @@ import AnalyticsPage from './pages/AnalyticsPage.tsx'
 import FocusPage from './pages/FocusPage.tsx'
 import SettingsPage from './pages/SettingsPage.tsx'
 import './i18n'
+import { installKurumi } from './lib/kurumi'
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,8 @@ const router = createBrowserRouter([
     ],
   },
 ])
+
+installKurumi()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
