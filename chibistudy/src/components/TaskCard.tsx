@@ -4,6 +4,7 @@ import { useTasksStore } from '../store/tasks'
 import { type Task } from '../types/task'
 import { useTranslation } from 'react-i18next'
 import { useTimerStore } from '../store/timer'
+import { buildIcsForTask, downloadIcs } from '../lib/ics'
 
 type Props = {
   task: Task
@@ -88,6 +89,12 @@ export default function TaskCard({ task }: Props) {
             Start
           </button>
         )}
+        <button
+          className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"
+          onClick={() => downloadIcs(`${task.title}.ics`, buildIcsForTask(task))}
+        >
+          ICS
+        </button>
         <a
           href={toGoogleCalendarUrl()}
           target="_blank"
