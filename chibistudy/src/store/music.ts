@@ -9,11 +9,13 @@ type MusicState = {
   audioUrl?: string
   playing: boolean
   loading: boolean
+  visible: boolean
   setQuery: (q: string) => void
   setSource: (s: Source) => void
   setFile: (file: File) => void
   resolveAndPlay: () => Promise<void>
   stop: () => void
+  setVisible: (v: boolean) => void
 }
 
 function parseVideoId(input: string): string | undefined {
@@ -42,11 +44,12 @@ export const useMusicStore = create<MusicState>((set, get) => ({
   audioUrl: undefined,
   playing: false,
   loading: false,
+  visible: false,
   setQuery: (q) => set({ query: q }),
   setSource: (s) => set({ source: s }),
   setFile: (file) => {
     const url = URL.createObjectURL(file)
-    set({ audioUrl: url, videoId: undefined, source: 'file', playing: true })
+    set({ audioUrl: url, videoId: undefined, source: 'file', playing: true, visible: true })
   },
   resolveAndPlay: async () => {
     const { source } = get()
@@ -56,7 +59,7 @@ export const useMusicStore = create<MusicState>((set, get) => ({
       set({ loading: true })
       const vid = parseVideoId(q)
       if (vid) {
-        set({ videoId: vid, audioUrl: undefined, playing: true, loading: false })
+        set({ videoId: vid, audioUrl: undefined, playing: true, loading: false, visible: true })
       } else {
         set({ loading: false })
         alert('Dán link YouTube hợp lệ (hoặc mã video 11 ký tự).')
@@ -68,7 +71,7 @@ export const useMusicStore = create<MusicState>((set, get) => ({
       try {
         // kiểm tra URL hợp lệ
         const u = new URL(q)
-        set({ audioUrl: u.toString(), videoId: undefined, playing: true })
+        set({ audioUrl: u.toString(), videoId: undefined, playing: true, visible: true })
       } catch {
         alert('Nhập URL audio hợp lệ (mp3, m4a, ogg, v.v.).')
       }
@@ -76,5 +79,6 @@ export const useMusicStore = create<MusicState>((set, get) => ({
     }
   },
   stop: () => set({ playing: false }),
+  setVisible: (v) => set({ visible: v }),
 }))
 

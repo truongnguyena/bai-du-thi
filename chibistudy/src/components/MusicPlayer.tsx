@@ -3,7 +3,7 @@ import AnimeLoader from './AnimeLoader'
 import { useRef, useEffect } from 'react'
 
 export default function MusicPlayer() {
-  const { query, setQuery, resolveAndPlay, videoId, playing, stop, loading, source, setSource, audioUrl, setFile } = useMusicStore()
+  const { query, setQuery, resolveAndPlay, videoId, playing, stop, loading, source, setSource, audioUrl, setFile, visible, setVisible } = useMusicStore()
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
@@ -16,9 +16,14 @@ export default function MusicPlayer() {
     }
   }, [playing, audioUrl])
 
+  if (!visible) return null
+
   return (
     <div className="fixed bottom-4 left-4 z-40 w-[340px] rounded-xl border border-pink-300 bg-white/90 p-3 backdrop-blur shadow">
-      <div className="mb-2 text-sm font-medium text-pink-700">Ami Music</div>
+      <div className="mb-2 flex items-center justify-between">
+        <div className="text-sm font-medium text-pink-700">Ami Music</div>
+        <button onClick={() => setVisible(false)} className="rounded-md border border-pink-300 px-2 py-0.5 text-xs hover:bg-pink-50">Đóng</button>
+      </div>
       <div className="mb-2 flex items-center gap-2">
         <select value={source} onChange={(e) => setSource(e.target.value as any)} className="rounded-md border border-pink-200 px-2 py-1 text-sm">
           <option value="youtube">YouTube</option>
