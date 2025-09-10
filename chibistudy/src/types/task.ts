@@ -11,6 +11,7 @@ export type Task = {
   title: string
   description?: string
   createdAt: string
+  updatedAt?: string
   dueDate?: string | null
   estimatedMinutes?: number
   actualMinutes?: number

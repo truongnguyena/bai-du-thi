@@ -30,6 +30,7 @@ export const useTasksStore = create<TasksState>((set, get) => ({
       title: input.title,
       description: input.description,
       createdAt: now,
+      updatedAt: now,
       dueDate: input.dueDate ?? null,
       estimatedMinutes: input.estimatedMinutes,
       actualMinutes: 0,
@@ -44,7 +45,7 @@ export const useTasksStore = create<TasksState>((set, get) => ({
     return task
   },
   update: async (id, partial) => {
-    await db.tasks.update(id, partial)
+    await db.tasks.update(id, { ...partial, updatedAt: dayjs().toISOString() })
     set({ items: get().items.map((t) => (t.id === id ? { ...t, ...partial } : t)) })
     provenance('update', { id })
   },
