@@ -29,13 +29,10 @@ function parseVideoId(input: string): string | undefined {
       const v = u.searchParams.get('v')
       if (v) return v
     }
-    // if looks like id
     if (/^[\w-]{11}$/.test(input)) return input
   } catch {}
   return undefined
 }
-
-// search by query is removed to avoid external API dependency
 
 export const useMusicStore = create<MusicState>((set, get) => ({
   query: '',
@@ -57,19 +54,34 @@ export const useMusicStore = create<MusicState>((set, get) => ({
     if (source === 'youtube') {
       if (!q) return
       set({ loading: true })
+      let ytUrl: string | null = null
       const vid = parseVideoId(q)
       if (vid) {
-        set({ videoId: vid, audioUrl: undefined, playing: true, loading: false, visible: true })
-      } else {
+        ytUrl = `https://www.youtube.com/watch?v=${vid}`
+      } else if (/^https?:\/\//.test(q)) {
+        ytUrl = q
+      }
+      if (!ytUrl) {
         set({ loading: false })
-        alert('Dán link YouTube hợp lệ (hoặc mã video 11 ký tự).')
+        alert('Dán link YouTube hợp lệ hoặc video ID.')
+        return
+      }
+      try {
+        const api = `/api/ytaudio?url=${encodeURIComponent(ytUrl)}`
+        // Backend sẽ 302 sang URL âm thanh, nên fetch đầu để lấy final URL
+        const resp = await fetch(api, { redirect: 'manual' as any })
+        const loc = resp.headers.get('Location')
+        if (!loc) throw new Error('no_location')
+        set({ audioUrl: loc, videoId: undefined, playing: true, loading: false, visible: true })
+      } catch (e) {
+        set({ loading: false })
+        alert('Không lấy được audio từ YouTube (có thể bị chặn).')
       }
       return
     }
     if (source === 'audio') {
       if (!q) return
       try {
-        // kiểm tra URL hợp lệ
         const u = new URL(q)
         set({ audioUrl: u.toString(), videoId: undefined, playing: true, visible: true })
       } catch {
