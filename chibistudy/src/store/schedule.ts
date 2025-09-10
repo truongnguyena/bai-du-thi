@@ -21,13 +21,20 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     const { items } = useTasksStore.getState()
     // Heuristic nâng cao: ưu tiên HIGH > MED > LOW, hạn gần trước, phân bổ 7 ngày tới
     const backlog = [...items].filter((t) => t.status !== 'done')
+    // cố gắng dùng điểm trì hoãn dự đoán nếu có
+    const withScore = backlog.map((t) => ({
+      t,
+      score: typeof t.procrastinationScore === 'number' ? t.procrastinationScore! : 1,
+    }))
     const priorityScore: Record<string, number> = { high: 0, med: 1, low: 2 }
-    const sorted = backlog.sort((a, b) => {
-      const pa = priorityScore[a.priority ?? 'med'] ?? 1
-      const pb = priorityScore[b.priority ?? 'med'] ?? 1
+    const sorted = withScore.sort((a, b) => {
+      const pa = priorityScore[a.t.priority ?? 'med'] ?? 1
+      const pb = priorityScore[b.t.priority ?? 'med'] ?? 1
       if (pa !== pb) return pa - pb
-      const da = dayjs(a.dueDate ?? '9999-12-31')
-      const db = dayjs(b.dueDate ?? '9999-12-31')
+      // điểm trì hoãn cao trước
+      if (Math.abs(a.score - b.score) > 0.05) return b.score - a.score
+      const da = dayjs(a.t.dueDate ?? '9999-12-31')
+      const db = dayjs(b.t.dueDate ?? '9999-12-31')
       return da.valueOf() - db.valueOf()
     })
 
@@ -45,7 +52,8 @@ export const useScheduleStore = create<ScheduleState>((set, get) => ({
     }
 
     const suggestions: Suggestion[] = []
-    for (const t of sorted) {
+    for (const s of sorted) {
+      const t = s.t
       let remaining = Math.max(30, t.estimatedMinutes ?? 60)
       // Ưu tiên trước ngày deadline nếu có
       const deadline = t.dueDate ? dayjs(t.dueDate) : null
