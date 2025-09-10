@@ -13,6 +13,7 @@ const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'))
 const FocusPage = lazy(() => import('./pages/FocusPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
 const ProfilePage = lazy(() => import('./pages/ProfilePage'))
+const BoardPage = lazy(() => import('./pages/BoardPage'))
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <InboxPage /> },
       { path: 'calendar', element: <CalendarPage /> },
+      { path: 'board', element: <BoardPage /> },
       { path: 'analytics', element: <AnalyticsPage /> },
       { path: 'focus', element: <FocusPage /> },
       { path: 'settings', element: <SettingsPage /> },

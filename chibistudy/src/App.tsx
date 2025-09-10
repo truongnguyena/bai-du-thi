@@ -21,6 +21,7 @@ function App() {
         <nav className="space-y-1 text-sm">
           <NavLink to="/" end className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>{t('inbox')}</NavLink>
           <NavLink to="/calendar" className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>{t('calendar')}</NavLink>
+          <NavLink to="/board" className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>Board</NavLink>
           <NavLink to="/analytics" className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>{t('analytics')}</NavLink>
           <NavLink to="/focus" className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>{t('focus')}</NavLink>
           <NavLink to="/settings" className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>{t('settings')}</NavLink>
