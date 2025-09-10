@@ -1,12 +1,14 @@
 import dayjs from 'dayjs'
 import { useTasksStore } from '../store/tasks'
 import { type Task } from '../types/task'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   task: Task
 }
 
 export default function TaskCard({ task }: Props) {
+  const { t } = useTranslation()
   const update = useTasksStore((s) => s.update)
   const remove = useTasksStore((s) => s.remove)
 
@@ -23,15 +25,15 @@ export default function TaskCard({ task }: Props) {
             onChange={(e) => update(task.id, { status: e.target.checked ? 'done' : 'todo' })}
           />
           <div className={`font-medium ${task.status === 'done' ? 'line-through text-slate-400' : 'text-slate-800'}`}>{task.title}</div>
-          {task.priority === 'high' && <span className="rounded bg-pink-100 px-2 py-0.5 text-xs text-pink-700">HIGH</span>}
+          {task.priority === 'high' && <span className="rounded bg-pink-100 px-2 py-0.5 text-xs text-pink-700">{t('high')}</span>}
         </div>
         <div className="text-xs text-slate-500">
           {task.dueDate ? (
             <span className={isOverdue ? 'text-red-600' : ''}>
-              Due {dayjs(task.dueDate).format('DD/MM HH:mm')}
+              {t('due')} {dayjs(task.dueDate).format('DD/MM HH:mm')}
             </span>
           ) : (
-            <span>No due</span>
+            <span>{t('noDue')}</span>
           )}
           {typeof task.estimatedMinutes === 'number' && (
             <span> · Est {task.estimatedMinutes}m</span>

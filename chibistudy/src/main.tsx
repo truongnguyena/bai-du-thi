@@ -8,6 +8,7 @@ import CalendarPage from './pages/CalendarPage.tsx'
 import AnalyticsPage from './pages/AnalyticsPage.tsx'
 import FocusPage from './pages/FocusPage.tsx'
 import SettingsPage from './pages/SettingsPage.tsx'
+import './i18n'
 
 const router = createBrowserRouter([
   {
