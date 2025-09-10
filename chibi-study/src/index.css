@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+/* ChibiStudy base styles */
+:root {
+  --bg: #fff0f5;
+  --fg: #521b41;
+  --accent: #ff69b4;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+}
