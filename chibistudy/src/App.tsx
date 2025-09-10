@@ -1,9 +1,14 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import GlobalTimerBar from './components/GlobalTimerBar'
+import { useEffect } from 'react'
+import { useAuthStore } from './store/auth'
+import AmiAssistant from './components/AmiAssistant'
 
 function App() {
   const { t, i18n } = useTranslation()
+  const { user, init, signInWithGoogle, signOut } = useAuthStore()
+  useEffect(() => { init() }, [init])
   return (
     <div className="h-full grid grid-cols-[240px_1fr] grid-rows-[56px_1fr]">
       <aside className="row-span-2 bg-pink-100 border-r border-pink-200 p-4">
@@ -32,6 +37,11 @@ function App() {
             <option value="vi">{t('vi')}</option>
             <option value="en">{t('en')}</option>
           </select>
+          {user ? (
+            <button onClick={signOut} className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50">Logout</button>
+          ) : (
+            <button onClick={signInWithGoogle} className="rounded-md bg-pink-500 px-3 py-1 text-xs text-white hover:bg-pink-600">Login with Google</button>
+          )}
           <div className="size-8 rounded-full bg-pink-300" />
         </div>
       </header>
@@ -39,6 +49,7 @@ function App() {
         <Outlet />
       </main>
       <GlobalTimerBar />
+      <AmiAssistant />
     </div>
   )
 }

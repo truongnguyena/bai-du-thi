@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { useTasksStore } from '../store/tasks'
 import { type Task } from '../types/task'
 import { useTranslation } from 'react-i18next'
@@ -9,10 +10,20 @@ type Props = {
 }
 
 export default function TaskCard({ task }: Props) {
+  dayjs.extend(utc)
   const { t } = useTranslation()
   const update = useTasksStore((s) => s.update)
   const remove = useTasksStore((s) => s.remove)
   const { activeTaskId, start, stop } = useTimerStore()
+  const toGoogleCalendarUrl = () => {
+    const base = 'https://calendar.google.com/calendar/r/eventedit'
+    const text = encodeURIComponent(task.title)
+    const details = encodeURIComponent(task.description ?? '')
+    const dates = task.dueDate ? dayjs(task.dueDate).utc().format('YYYYMMDDTHHmmss[Z]') : null
+    const end = task.dueDate ? dayjs(task.dueDate).add(task.estimatedMinutes ?? 30, 'minute').utc().format('YYYYMMDDTHHmmss[Z]') : null
+    const timeRange = dates && end ? `&dates=${dates}/${end}` : ''
+    return `${base}?text=${text}&details=${details}${timeRange}`
+  }
 
   const isOverdue = task.dueDate ? dayjs().isAfter(dayjs(task.dueDate)) && task.status !== 'done' : false
 
@@ -77,6 +88,14 @@ export default function TaskCard({ task }: Props) {
             Start
           </button>
         )}
+        <a
+          href={toGoogleCalendarUrl()}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"
+        >
+          GCal
+        </a>
         <button
           className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"
           onClick={() => remove(task.id)}
