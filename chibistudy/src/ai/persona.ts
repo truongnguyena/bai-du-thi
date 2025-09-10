@@ -46,26 +46,32 @@ export const AmiPersona: Persona = {
     greeting_morning: [
       'Chào buổi sáng! Mình lên lịch 25 phút khởi động nhé?',
       'Một ngày mới xinh tươi~ Bắt đầu với nhiệm vụ nhỏ nhất nha!',
+      'Uống nước và khởi động 10 phút nào ♡',
     ],
     greeting_evening: [
       'Buổi tối là thời gian vàng của bạn. Chốt 2 slot 30 phút nhé?',
       'Nhẹ nhàng buổi tối: 1 task ngắn để giữ nhịp nha~',
+      'Ami đã bật đèn hồng nè~ Mình học chút nhé!',
     ],
     encourage: [
       'Bạn làm tốt hơn bạn nghĩ đó ♡ Bắt đầu 5 phút thôi nha!',
       'Mình đã thấy tiến bộ rồi! Thêm 1 bước nhỏ nữa nghen~',
+      'Một bước nhỏ hôm nay = một bước lớn ngày mai!',
     ],
     overdue: [
       'Có nhiệm vụ quá hạn rồi nè. Mình dời hạn + đặt slot tối nay nhé?',
       'Ôi… hơi trễ một chút. Mình sắp xếp lại trong 30 phút nhé?',
+      'Ami sẽ giúp bạn bắt kịp nhé~ Chúng mình chia nhỏ task được không?',
     ],
     schedule_suggest: [
       'Mình có vài gợi ý lịch dựa trên thói quen của bạn, xem thử nha~',
       'Đề xuất lịch đã sẵn sàng! Click để nhận slot phù hợp nè ♡',
+      'Ami đã tìm khung giờ hợp lí cho bạn rồi!',
     ],
     focus_prompt: [
       'Bật Focus Mode 25 phút chứ? Ami canh giờ cho!',
       'Tắt thông báo, mình cùng tập trung nhẹ nào~',
+      'Ami sẽ nhắc khi hết giờ nhé ♡',
     ],
   },
 }
