@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { useTasksStore } from '../store/tasks'
 import { type Task } from '../types/task'
 import { useTranslation } from 'react-i18next'
+import { useTimerStore } from '../store/timer'
 
 type Props = {
   task: Task
@@ -11,6 +12,7 @@ export default function TaskCard({ task }: Props) {
   const { t } = useTranslation()
   const update = useTasksStore((s) => s.update)
   const remove = useTasksStore((s) => s.remove)
+  const { activeTaskId, start, stop } = useTimerStore()
 
   const isOverdue = task.dueDate ? dayjs().isAfter(dayjs(task.dueDate)) && task.status !== 'done' : false
 
@@ -39,7 +41,16 @@ export default function TaskCard({ task }: Props) {
             <span> · Est {task.estimatedMinutes}m</span>
           )}
           {typeof task.actualMinutes === 'number' && task.actualMinutes > 0 && (
-            <span> · Actual {task.actualMinutes}m</span>
+            <span>
+              {' '}· Actual {task.actualMinutes}m
+              {typeof task.estimatedMinutes === 'number' && task.estimatedMinutes > 0 && (
+                <>
+                  {' '}(
+                  {Math.round(((task.actualMinutes ?? 0) / (task.estimatedMinutes ?? 1)) * 100)}%
+                  )
+                </>
+              )}
+            </span>
           )}
         </div>
         {task.tags?.length ? (
@@ -51,6 +62,21 @@ export default function TaskCard({ task }: Props) {
         ) : null}
       </div>
       <div className="flex items-center gap-2">
+        {activeTaskId === task.id ? (
+          <button
+            className="rounded-md bg-pink-500 px-2 py-1 text-xs text-white hover:bg-pink-600"
+            onClick={() => stop()}
+          >
+            Stop
+          </button>
+        ) : (
+          <button
+            className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"
+            onClick={() => start(task.id)}
+          >
+            Start
+          </button>
+        )}
         <button
           className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"
           onClick={() => remove(task.id)}

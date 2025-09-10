@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import GlobalTimerBar from './components/GlobalTimerBar'
 
 function App() {
   const { t, i18n } = useTranslation()
@@ -37,6 +38,7 @@ function App() {
       <main className="col-start-2 overflow-y-auto p-4">
         <Outlet />
       </main>
+      <GlobalTimerBar />
     </div>
   )
 }
