@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { useAuthStore } from './store/auth'
 import AmiAssistant from './components/AmiAssistant'
 import MusicPlayer from './components/MusicPlayer'
+import VoiceControl from './components/VoiceControl'
 
 function App() {
   const { t, i18n } = useTranslation()
@@ -53,6 +54,7 @@ function App() {
       <GlobalTimerBar />
       <AmiAssistant />
       <MusicPlayer />
+      <VoiceControl />
     </div>
   )
 }
