@@ -24,3 +24,25 @@ body {
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Ami 2D animations */
+.ami-float { animation: amiFloat 3s ease-in-out infinite; }
+@keyframes amiFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.ami-eyelids { animation: amiBlink 4s steps(1, end) infinite; }
+@keyframes amiBlink {
+  0%, 92%, 100% { opacity: 0; }
+  94%, 96% { opacity: 1; }
+}
+.ami-hand { transform-origin: 32px 47px; animation: amiWave 2.5s ease-in-out infinite; }
+@keyframes amiWave {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2deg); }
+}
+.ami-sparkles { animation: amiSparkle 2s ease-in-out infinite; }
+@keyframes amiSparkle {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}

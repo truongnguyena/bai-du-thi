@@ -4,6 +4,7 @@ import { AmiPersona } from '../ai/persona'
 import { useTasksStore } from '../store/tasks'
 import { useScheduleStore } from '../store/schedule'
 import { useMusicStore } from '../store/music'
+import AmiSprite2D from './AmiSprite2D'
 
 export default function AmiAssistant() {
   const [open, setOpen] = useState(true)
@@ -38,10 +39,10 @@ export default function AmiAssistant() {
       )}
       <button
         onClick={() => setOpen((x) => !x)}
-        className="flex items-center gap-2 rounded-full border border-pink-300 bg-pink-100 px-3 py-2 shadow animate-bounce"
+        className="flex items-center gap-2 rounded-full border border-pink-300 bg-pink-100 px-3 py-2 shadow"
         title="Ami — tóc trắng, mắt đỏ, đồ hầu gái chibi"
       >
-        <img src={new URL('../assets/ami-chibi.svg', import.meta.url).toString()} alt="Ami chibi" className="h-10 w-10" />
+        <AmiSprite2D />
         <span className="text-pink-700 text-sm font-medium">Ami</span>
       </button>
     </div>
