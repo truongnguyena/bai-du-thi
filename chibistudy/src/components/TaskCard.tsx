@@ -6,16 +6,17 @@ import { useTranslation } from 'react-i18next'
 import { useTimerStore } from '../store/timer'
 import { buildIcsForTask, downloadIcs } from '../lib/ics'
 
+dayjs.extend(utc)
+
 type Props = {
   task: Task
 }
 
 export default function TaskCard({ task }: Props) {
-  dayjs.extend(utc)
   const { t } = useTranslation()
   const update = useTasksStore((s) => s.update)
   const remove = useTasksStore((s) => s.remove)
-  const { activeTaskId, start, stop } = useTimerStore()
+  const { activeTaskId, start, stop, startWithTarget } = useTimerStore()
   const toGoogleCalendarUrl = () => {
     const base = 'https://calendar.google.com/calendar/r/eventedit'
     const text = encodeURIComponent(task.title)
@@ -89,12 +90,20 @@ export default function TaskCard({ task }: Props) {
             Stop
           </button>
         ) : (
-          <button
-            className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"
-            onClick={() => start(task.id)}
-          >
-            Start
-          </button>
+          <>
+            <button
+              className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"
+              onClick={() => start(task.id)}
+            >
+              Start
+            </button>
+            <button
+              className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"
+              onClick={() => startWithTarget(task.id, 25)}
+            >
+              Focus 25m
+            </button>
+          </>
         )}
         <button
           className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"

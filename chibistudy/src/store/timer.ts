@@ -2,11 +2,14 @@ import { create } from 'zustand'
 import dayjs from 'dayjs'
 import { useTasksStore } from './tasks'
 import { provenance } from '../lib/kurumi'
+import { useAmiStore } from './ami'
 
 type TimerState = {
   activeTaskId: string | null
   startedAtIso: string | null
+  targetMinutes?: number | null
   start: (taskId: string) => Promise<void>
+  startWithTarget: (taskId: string, minutes: number) => Promise<void>
   stop: () => Promise<void>
 }
 
@@ -21,8 +24,12 @@ export const useTimerStore = create<TimerState>((set, get) => ({
       await get().stop()
     }
     await tasks.update(taskId, { status: 'in_progress' })
-    set({ activeTaskId: taskId, startedAtIso: dayjs().toISOString() })
+    set({ activeTaskId: taskId, startedAtIso: dayjs().toISOString(), targetMinutes: null })
     provenance('start', { id: taskId })
+  },
+  startWithTarget: async (taskId, minutes) => {
+    await useTimerStore.getState().start(taskId)
+    set({ targetMinutes: Math.max(1, Math.floor(minutes)) })
   },
   stop: async () => {
     const { activeTaskId, startedAtIso } = get()
@@ -34,6 +41,10 @@ export const useTimerStore = create<TimerState>((set, get) => ({
     await tasks.update(activeTaskId, { actualMinutes: newActual })
     set({ activeTaskId: null, startedAtIso: null })
     provenance('stop', { id: activeTaskId, elapsedMinutes })
+    const est = task?.estimatedMinutes ?? 0
+    const diff = est > 0 ? newActual - est : null
+    const msg = diff !== null ? (diff > 0 ? `Bạn vượt ước lượng ${diff} phút. Nghỉ ngơi chút nhé?` : `Bạn hoàn thành sớm ${Math.abs(diff)} phút! Rất tốt!`) : `Bạn đã làm ${elapsedMinutes} phút.`
+    useAmiStore.getState().notify(`Timer kết thúc: ${msg}`)
   },
 }))
 

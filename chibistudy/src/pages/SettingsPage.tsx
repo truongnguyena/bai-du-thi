@@ -1,10 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { syncNow } from '../api/sync'
 import { useAIStore } from '../store/ai'
+import { useTasksStore } from '../store/tasks'
+import { exportTasksToExcel } from '../lib/exportExcel'
 
 export default function SettingsPage() {
   const { t } = useTranslation()
   const { status, lastTrainedAt, train, predictAll } = useAIStore()
+  const tasks = useTasksStore((s) => s.items)
   return (
     <div className="space-y-2">
       <h1 className="text-2xl font-bold text-pink-700">{t('settingsTitle')}</h1>
@@ -14,6 +17,12 @@ export default function SettingsPage() {
           onClick={() => syncNow()}
         >
           Đồng bộ ngay
+        </button>
+        <button
+          className="ml-2 rounded-md border border-pink-300 px-3 py-2 text-sm hover:bg-pink-50"
+          onClick={() => exportTasksToExcel(tasks)}
+        >
+          Xuất Excel
         </button>
         <div className="mt-2 text-xs text-slate-500">Yêu cầu cấu hình VITE_SUPABASE_URL/VITE_SUPABASE_ANON_KEY</div>
       </div>

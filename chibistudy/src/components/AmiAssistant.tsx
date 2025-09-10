@@ -5,6 +5,7 @@ import { useTasksStore } from '../store/tasks'
 import { useScheduleStore } from '../store/schedule'
 import { useMusicStore } from '../store/music'
 import AmiSprite2D from './AmiSprite2D'
+import { useAmiStore } from '../store/ami'
 
 export default function AmiAssistant() {
   const [open, setOpen] = useState(true)
@@ -24,12 +25,13 @@ export default function AmiAssistant() {
     const arr = AmiPersona.messages[key]
     return arr[Math.floor(Math.random() * arr.length)]
   }, [key])
+  const amiCue = useAmiStore((s) => s.cue)
   return (
     <div className="fixed bottom-6 right-6 z-40">
       {open && (
         <div className="mb-2 max-w-xs rounded-2xl border border-pink-300 bg-white p-3 text-sm shadow-lg fade-in">
           <div className="mb-1 font-semibold text-pink-700">Ami (AI Hầu gái) {AmiPersona.visual.emoji}</div>
-          <div className="text-slate-700">{phrase}</div>
+          <div className="text-slate-700">{amiCue || phrase}</div>
           <div className="mt-2 flex gap-2">
             <button onClick={suggest} className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50">Đề xuất lịch</button>
             <a href="/focus" className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50">Focus 25m</a>
