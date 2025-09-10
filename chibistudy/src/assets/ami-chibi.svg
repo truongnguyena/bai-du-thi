@@ -1,0 +1,17 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="hair" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(32 16) rotate(90) scale(20)">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EDE9FE"/>
+    </radialGradient>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="#FFF0F5" stroke="#FFC8DB"/>
+  <circle cx="32" cy="28" r="12" fill="url(#hair)"/>
+  <ellipse cx="24" cy="30" rx="3" ry="4" fill="#FF6B6B"/>
+  <ellipse cx="40" cy="30" rx="3" ry="4" fill="#FF6B6B"/>
+  <circle cx="24" cy="30" r="1.2" fill="#FFF"/>
+  <circle cx="40" cy="30" r="1.2" fill="#FFF"/>
+  <path d="M22 38 C 26 42, 38 42, 42 38" stroke="#FF8FB3" stroke-width="2" fill="none"/>
+  <rect x="20" y="42" width="24" height="10" rx="5" fill="#FFD1E1" stroke="#FFB6C1"/>
+  <path d="M24 44 h16 v2 H24 z" fill="#FFFFFF" opacity="0.9"/>
+</svg>
