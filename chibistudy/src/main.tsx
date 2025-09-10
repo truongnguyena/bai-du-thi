@@ -8,6 +8,7 @@ import CalendarPage from './pages/CalendarPage.tsx'
 import AnalyticsPage from './pages/AnalyticsPage.tsx'
 import FocusPage from './pages/FocusPage.tsx'
 import SettingsPage from './pages/SettingsPage.tsx'
+import ProfilePage from './pages/ProfilePage.tsx'
 import './i18n'
 import { installKurumi } from './lib/kurumi'
 
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       { path: 'analytics', element: <AnalyticsPage /> },
       { path: 'focus', element: <FocusPage /> },
       { path: 'settings', element: <SettingsPage /> },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
 ])

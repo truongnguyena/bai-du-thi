@@ -22,6 +22,7 @@ function App() {
           <NavLink to="/analytics" className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>{t('analytics')}</NavLink>
           <NavLink to="/focus" className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>{t('focus')}</NavLink>
           <NavLink to="/settings" className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>{t('settings')}</NavLink>
+          <NavLink to="/profile" className={({ isActive }) => `block rounded px-3 py-2 ${isActive ? 'bg-pink-200 text-pink-900' : 'hover:bg-pink-50'}`}>Profile</NavLink>
         </nav>
       </aside>
       <header className="col-start-2 flex items-center justify-between border-b border-pink-200 bg-white/70 backdrop-blur px-4">

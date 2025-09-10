@@ -29,7 +29,7 @@ export default function TaskCard({ task }: Props) {
   const isOverdue = task.dueDate ? dayjs().isAfter(dayjs(task.dueDate)) && task.status !== 'done' : false
 
   return (
-    <div className="flex items-start justify-between rounded-lg border border-pink-200 bg-white p-3">
+    <div className="flex items-start justify-between rounded-lg border border-pink-200 bg-white p-3 hover-lift fade-in">
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <input
