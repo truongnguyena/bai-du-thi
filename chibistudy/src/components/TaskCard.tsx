@@ -1,0 +1,62 @@
+import dayjs from 'dayjs'
+import { useTasksStore } from '../store/tasks'
+import { type Task } from '../types/task'
+
+type Props = {
+  task: Task
+}
+
+export default function TaskCard({ task }: Props) {
+  const update = useTasksStore((s) => s.update)
+  const remove = useTasksStore((s) => s.remove)
+
+  const isOverdue = task.dueDate ? dayjs().isAfter(dayjs(task.dueDate)) && task.status !== 'done' : false
+
+  return (
+    <div className="flex items-start justify-between rounded-lg border border-pink-200 bg-white p-3">
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            className="size-4 accent-pink-500"
+            checked={task.status === 'done'}
+            onChange={(e) => update(task.id, { status: e.target.checked ? 'done' : 'todo' })}
+          />
+          <div className={`font-medium ${task.status === 'done' ? 'line-through text-slate-400' : 'text-slate-800'}`}>{task.title}</div>
+          {task.priority === 'high' && <span className="rounded bg-pink-100 px-2 py-0.5 text-xs text-pink-700">HIGH</span>}
+        </div>
+        <div className="text-xs text-slate-500">
+          {task.dueDate ? (
+            <span className={isOverdue ? 'text-red-600' : ''}>
+              Due {dayjs(task.dueDate).format('DD/MM HH:mm')}
+            </span>
+          ) : (
+            <span>No due</span>
+          )}
+          {typeof task.estimatedMinutes === 'number' && (
+            <span> · Est {task.estimatedMinutes}m</span>
+          )}
+          {typeof task.actualMinutes === 'number' && task.actualMinutes > 0 && (
+            <span> · Actual {task.actualMinutes}m</span>
+          )}
+        </div>
+        {task.tags?.length ? (
+          <div className="flex flex-wrap gap-1">
+            {task.tags.map((t) => (
+              <span key={t} className="rounded-full bg-pink-50 px-2 py-0.5 text-xs text-pink-700 border border-pink-200">#{t}</span>
+            ))}
+          </div>
+        ) : null}
+      </div>
+      <div className="flex items-center gap-2">
+        <button
+          className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-50"
+          onClick={() => remove(task.id)}
+        >
+          Xoá
+        </button>
+      </div>
+    </div>
+  )
+}
+
