@@ -1,11 +1,17 @@
 import { create } from 'zustand'
 
+type Source = 'youtube' | 'audio' | 'file'
+
 type MusicState = {
   query: string
+  source: Source
   videoId?: string
+  audioUrl?: string
   playing: boolean
   loading: boolean
   setQuery: (q: string) => void
+  setSource: (s: Source) => void
+  setFile: (file: File) => void
   resolveAndPlay: () => Promise<void>
   stop: () => void
 }
@@ -27,41 +33,46 @@ function parseVideoId(input: string): string | undefined {
   return undefined
 }
 
-async function searchVideoIdByQuery(q: string): Promise<string | undefined> {
-  const key = import.meta.env.VITE_YT_API_KEY
-  if (!key) return undefined
-  const url = new URL('https://www.googleapis.com/youtube/v3/search')
-  url.searchParams.set('part', 'snippet')
-  url.searchParams.set('type', 'video')
-  url.searchParams.set('maxResults', '1')
-  url.searchParams.set('q', q)
-  url.searchParams.set('key', key)
-  const res = await fetch(url.toString())
-  if (!res.ok) return undefined
-  const data = await res.json()
-  const id = data.items?.[0]?.id?.videoId
-  return typeof id === 'string' ? id : undefined
-}
+// search by query is removed to avoid external API dependency
 
 export const useMusicStore = create<MusicState>((set, get) => ({
   query: '',
+  source: 'youtube',
   videoId: undefined,
+  audioUrl: undefined,
   playing: false,
   loading: false,
   setQuery: (q) => set({ query: q }),
+  setSource: (s) => set({ source: s }),
+  setFile: (file) => {
+    const url = URL.createObjectURL(file)
+    set({ audioUrl: url, videoId: undefined, source: 'file', playing: true })
+  },
   resolveAndPlay: async () => {
+    const { source } = get()
     const q = get().query.trim()
-    if (!q) return
-    set({ loading: true })
-    let vid = parseVideoId(q)
-    if (!vid) {
-      vid = await searchVideoIdByQuery(q)
+    if (source === 'youtube') {
+      if (!q) return
+      set({ loading: true })
+      const vid = parseVideoId(q)
+      if (vid) {
+        set({ videoId: vid, audioUrl: undefined, playing: true, loading: false })
+      } else {
+        set({ loading: false })
+        alert('Dán link YouTube hợp lệ (hoặc mã video 11 ký tự).')
+      }
+      return
     }
-    if (vid) {
-      set({ videoId: vid, playing: true, loading: false })
-    } else {
-      set({ loading: false })
-      alert('Không tìm thấy bài nhạc. Thử dán link YouTube hoặc đặt VITE_YT_API_KEY.')
+    if (source === 'audio') {
+      if (!q) return
+      try {
+        // kiểm tra URL hợp lệ
+        const u = new URL(q)
+        set({ audioUrl: u.toString(), videoId: undefined, playing: true })
+      } catch {
+        alert('Nhập URL audio hợp lệ (mp3, m4a, ogg, v.v.).')
+      }
+      return
     }
   },
   stop: () => set({ playing: false }),
