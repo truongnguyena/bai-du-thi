@@ -19,6 +19,7 @@ export type Task = {
   rating?: number
   tags: string[]
   status: TaskStatus
+  subtasks?: { id: string; title: string; done: boolean }[]
   recurrence?: TaskRecurrence
   projectId?: string | null
   createdBy?: string

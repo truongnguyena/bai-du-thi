@@ -5,6 +5,7 @@ import { type Task } from '../types/task'
 import { useTranslation } from 'react-i18next'
 import { useTimerStore } from '../store/timer'
 import { buildIcsForTask, downloadIcs } from '../lib/ics'
+import { useState } from 'react'
 
 dayjs.extend(utc)
 
@@ -16,7 +17,11 @@ export default function TaskCard({ task }: Props) {
   const { t } = useTranslation()
   const update = useTasksStore((s) => s.update)
   const remove = useTasksStore((s) => s.remove)
+  const addSubtask = useTasksStore((s) => s.addSubtask)
+  const toggleSubtask = useTasksStore((s) => s.toggleSubtask)
+  const removeSubtask = useTasksStore((s) => s.removeSubtask)
   const { activeTaskId, start, stop, startWithTarget } = useTimerStore()
+  const [newSub, setNewSub] = useState('')
   const toGoogleCalendarUrl = () => {
     const base = 'https://calendar.google.com/calendar/r/eventedit'
     const text = encodeURIComponent(task.title)
@@ -31,7 +36,7 @@ export default function TaskCard({ task }: Props) {
 
   return (
     <div className="flex items-start justify-between rounded-lg border border-pink-200 bg-white p-3 hover-lift fade-in">
-      <div className="space-y-1">
+      <div className="space-y-2">
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -73,6 +78,27 @@ export default function TaskCard({ task }: Props) {
             ))}
           </div>
         ) : null}
+        <div className="rounded-md border border-pink-100 bg-pink-50 p-2">
+          <div className="mb-1 text-xs font-medium text-pink-700">Checklist</div>
+          <div className="space-y-1">
+            {(task.subtasks ?? []).map((s) => (
+              <div key={s.id} className="flex items-center justify-between gap-2">
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" className="size-4 accent-pink-500" checked={s.done} onChange={() => toggleSubtask(task.id, s.id)} />
+                  <span className={s.done ? 'line-through text-slate-400' : ''}>{s.title}</span>
+                </label>
+                <button onClick={() => removeSubtask(task.id, s.id)} className="rounded-md border border-pink-300 px-2 py-0.5 text-xs hover:bg-pink-100">X</button>
+              </div>
+            ))}
+            <form
+              onSubmit={(e) => { e.preventDefault(); if (newSub.trim()) { void addSubtask(task.id, newSub.trim()); setNewSub('') } }}
+              className="flex items-center gap-2"
+            >
+              <input value={newSub} onChange={(e) => setNewSub(e.target.value)} placeholder="Thêm mục…" className="flex-1 rounded-md border border-pink-200 px-2 py-1 text-sm" />
+              <button className="rounded-md border border-pink-300 px-2 py-1 text-xs hover:bg-pink-100">Thêm</button>
+            </form>
+          </div>
+        </div>
       </div>
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-0.5 text-yellow-500">

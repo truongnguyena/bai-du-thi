@@ -12,6 +12,9 @@ type TasksState = {
   create: (input: CreateTaskInput) => Promise<Task>
   update: (id: string, partial: Partial<Task>) => Promise<void>
   remove: (id: string) => Promise<void>
+  addSubtask: (taskId: string, title: string) => Promise<void>
+  toggleSubtask: (taskId: string, subtaskId: string) => Promise<void>
+  removeSubtask: (taskId: string, subtaskId: string) => Promise<void>
 }
 
 export const useTasksStore = create<TasksState>((set, get) => ({
@@ -53,6 +56,31 @@ export const useTasksStore = create<TasksState>((set, get) => ({
     await db.tasks.delete(id)
     set({ items: get().items.filter((t) => t.id !== id) })
     provenance('remove', { id })
+  },
+  addSubtask: async (taskId, title) => {
+    const list = get().items
+    const t = list.find((x) => x.id === taskId)
+    if (!t) return
+    const st = { id: nanoid(), title, done: false }
+    const subtasks = [...(t.subtasks ?? []), st]
+    await db.tasks.update(taskId, { subtasks, updatedAt: dayjs().toISOString() })
+    set({ items: list.map((x) => (x.id === taskId ? { ...x, subtasks } : x)) })
+  },
+  toggleSubtask: async (taskId, subtaskId) => {
+    const list = get().items
+    const t = list.find((x) => x.id === taskId)
+    if (!t) return
+    const subtasks = (t.subtasks ?? []).map((s) => (s.id === subtaskId ? { ...s, done: !s.done } : s))
+    await db.tasks.update(taskId, { subtasks, updatedAt: dayjs().toISOString() })
+    set({ items: list.map((x) => (x.id === taskId ? { ...x, subtasks } : x)) })
+  },
+  removeSubtask: async (taskId, subtaskId) => {
+    const list = get().items
+    const t = list.find((x) => x.id === taskId)
+    if (!t) return
+    const subtasks = (t.subtasks ?? []).filter((s) => s.id !== subtaskId)
+    await db.tasks.update(taskId, { subtasks, updatedAt: dayjs().toISOString() })
+    set({ items: list.map((x) => (x.id === taskId ? { ...x, subtasks } : x)) })
   },
 }))
 
