@@ -4,6 +4,7 @@ import GlobalTimerBar from './components/GlobalTimerBar'
 import { useEffect } from 'react'
 import { useAuthStore } from './store/auth'
 import AmiAssistant from './components/AmiAssistant'
+import MusicPlayer from './components/MusicPlayer'
 
 function App() {
   const { t, i18n } = useTranslation()
@@ -51,6 +52,7 @@ function App() {
       </main>
       <GlobalTimerBar />
       <AmiAssistant />
+      <MusicPlayer />
     </div>
   )
 }
